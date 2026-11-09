@@ -64,3 +64,8 @@ relatorio/   relatório final
 - Validar sempre no `cenarios/cenario_fixo.csv` antes de rodar o cenário oficial.
 - Prioridade: o grupo usa **5 = maior prioridade** (constante
   `Prioridade.MAIOR_NUMERO_VENCE`), até o professor confirmar.
+- `main` = versão de entrega. Ninguém commita direto nela.
+- `develop` = integração. Cada pessoa cria a sua branch **a partir da `develop`**
+  e abre Pull Request **para a `develop`**:
+  `feature/cpu`, `feature/fcfs-sjf`, `feature/prioridade-rr`, `feature/metricas`.
+- Antes de começar: `git checkout develop` e `git pull`.
