@@ -1,0 +1,13 @@
+# saída da compilação (javac e Eclipse)
+out/
+bin/
+*.class
+
+# outras IDEs
+.idea/
+.vscode/
+*.iml
+
+# sistema
+.DS_Store
+Thumbs.db
