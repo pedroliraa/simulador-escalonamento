@@ -2,34 +2,43 @@ package simulador.escalonador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 
 import simulador.modelo.Processo;
 
-/**
- * Shortest Job First: menos instruções restantes primeiro, não preemptivo.
- * Desempate: chegada, depois menor ID.
- * TODO (Pessoa 3): implementar.
- */
 public class SJF implements Escalonador {
+
+    private final List<Processo> fila = new ArrayList<>();
+
+    private static final Comparator<Processo> CRITERIO =
+            Comparator.comparingInt(Processo::getQuantidadeInstrucoes)
+                      .thenComparingInt(Processo::getChegada)
+                      .thenComparingInt(Processo::getId);
 
     @Override
     public void adicionar(Processo p) {
-        // TODO
+        fila.add(p);
     }
 
     @Override
     public Processo proximo() {
-        return null; // TODO
+        if(fila.isEmpty()){
+            return null;
+        }
+        Processo menor = Collections.min(fila, CRITERIO);
+        fila.remove(menor);
+        return(menor);
     }
 
     @Override
     public boolean vazio() {
-        return true; // TODO
+        return fila.isEmpty();
     }
 
     @Override
     public List<Processo> fila() {
-        return new ArrayList<>(); // TODO
+        return new ArrayList<>(fila);
     }
 
     @Override
