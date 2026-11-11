@@ -1,6 +1,8 @@
 package simulador.escalonador;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import simulador.modelo.Processo;
@@ -8,34 +10,33 @@ import simulador.modelo.Processo;
 /**
  * Round Robin: fila FIFO; quem estoura o quantum volta para o fim da fila
  * (quem devolve é a CPU, chamando adicionar).
- * TODO (Pessoa 4): implementar.
+ * Pessoa 4 (Kailany).
  */
 public class RoundRobin implements Escalonador {
-
     private final int quantum;
-
+    private final Deque<Processo> fila = new ArrayDeque<>();
     public RoundRobin(int quantum) {
         this.quantum = quantum;
     }
 
     @Override
-    public void adicionar(Processo p) {
-        // TODO
+    public void adicionar(Processo processoPronto) {
+        fila.addLast(processoPronto);
     }
 
     @Override
     public Processo proximo() {
-        return null; // TODO
+        return fila.pollFirst();
     }
 
     @Override
     public boolean vazio() {
-        return true; // TODO
+        return fila.isEmpty();
     }
 
     @Override
     public List<Processo> fila() {
-        return new ArrayList<>(); // TODO
+        return new ArrayList<>(fila);
     }
 
     @Override
@@ -45,6 +46,7 @@ public class RoundRobin implements Escalonador {
 
     @Override
     public String nome() {
-        return "RR(q=" + quantum + ")";
+        return "RR(quantum=" + quantum + ")";
     }
+
 }
