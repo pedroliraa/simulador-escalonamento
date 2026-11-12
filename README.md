@@ -69,3 +69,10 @@ relatorio/   relatório final
   e abre Pull Request **para a `develop`**:
   `feature/cpu`, `feature/fcfs-sjf`, `feature/prioridade-rr`, `feature/metricas`.
 - Antes de começar: `git checkout develop` e `git pull`.
+
+## Gerador e FCFS (Pessoa 3)
+
+Implementação, cenário oficial e verificação disponíveis na branch `feature/Gerador-FCFS`.
+As orientações para integração e o texto para o relatório estão em [relatorio/pessoa3-gerador-fcfs.md](relatorio/pessoa3-gerador-fcfs.md).
+Depois de compilar, execute `java -cp out simulador.gerador.TesteGeradorFCFS` para validar esta parte com a CPU existente.
+O SJF é mantido pelo outro integrante. Main e Metricas ainda precisam da integração dos responsáveis.
