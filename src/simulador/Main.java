@@ -1,33 +1,56 @@
 package simulador;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import simulador.cpu.CPU;
+import simulador.escalonador.Escalonador;
+import simulador.escalonador.FCFS;
+import simulador.escalonador.Prioridade;
+import simulador.escalonador.RoundRobin;
+import simulador.escalonador.SJF;
+import simulador.gerador.GeradorDeProcessos;
 import simulador.modelo.Processo;
 
 /**
- * Ponto de entrada. Por enquanto só cria 3 processos na mão e imprime.
- * No final (Pessoa 1) vai rodar os 6 cenários: FCFS, SJF, Prioridade, RR q=2, q=5, q=10.
+ * Ponto de entrada: roda os 6 cenários (FCFS, SJF, Prioridade, RR q=2, q=5, q=10)
+ * sobre o mesmo conjunto de processos.
+ * Uso: Main [caminho do CSV]. Sem argumento, usa cenarios/cenario_fixo.csv.
  */
 public class Main {
 
-    public static void main(String[] args) {
-        System.out.println("Simulador de Escalonamento - esqueleto OK");
+    private static final String CENARIO_PADRAO = "cenarios/cenario_fixo.csv";
+    private static final int SLEEP_MS = 0;
 
-        List<Processo> processos = List.of(
-                new Processo(1, 5, 2, 0),
-                new Processo(2, 3, 5, 1),
-                new Processo(3, 8, 1, 2)
+    public static void main(String[] args) {
+        String caminho = args.length > 0 ? args[0] : CENARIO_PADRAO;
+        List<Processo> base = GeradorDeProcessos.lerCsv(caminho);
+
+        List<Escalonador> algoritmos = List.of(
+                new FCFS(),
+                new SJF(),
+                new Prioridade(),
+                new RoundRobin(2),
+                new RoundRobin(5),
+                new RoundRobin(10)
         );
 
-        for (Processo p : processos) {
-            System.out.println("  " + p + " chega em t=" + p.getChegada());
-        }
+        for (Escalonador algoritmo : algoritmos) {
+            List<Processo> copias = new ArrayList<>();
+            for (Processo p : base) {
+                copias.add(p.copia());
+            }
 
-        // Teste rápido do copia(): a cópia não pode ser afetada pelo original
-        Processo original = processos.get(0);
-        Processo copia = original.copia();
-        original.executarInstrucao();
-        System.out.println("Original depois de 1 instrucao: " + original);
-        System.out.println("Copia continua cheia:           " + copia);
+            System.out.println();
+            System.out.println("===== " + algoritmo.nome() + " =====");
+            new CPU(algoritmo, copias, SLEEP_MS).executar();
+
+            int soma = 0;
+            for (Processo p : copias) {
+                System.out.printf("P%d: fim=%d, espera=%d%n", p.getId(), p.getFim(), p.tempoEspera());
+                soma += p.tempoEspera();
+            }
+            System.out.printf("Espera média: %.1f%n", soma / (double) copias.size());
+        }
     }
 }
