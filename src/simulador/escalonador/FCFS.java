@@ -1,43 +1,31 @@
 package simulador.escalonador;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-
+import java.util.Objects;
 import simulador.modelo.Processo;
 
-/**
- * First Come, First Served: fila simples, não preemptivo.
- * TODO (Pessoa 3): implementar.
- */
+/** FIFO não preemptivo. A CPU adiciona os processos conforme chegam. */
 public class FCFS implements Escalonador {
+    private final Deque<Processo> processos = new ArrayDeque<>();
 
     @Override
-    public void adicionar(Processo p) {
-        // TODO
-    }
+    public void adicionar(Processo p) { processos.addLast(Objects.requireNonNull(p)); }
 
     @Override
-    public Processo proximo() {
-        return null; // TODO
-    }
+    public Processo proximo() { return processos.pollFirst(); }
 
     @Override
-    public boolean vazio() {
-        return true; // TODO
-    }
+    public boolean vazio() { return processos.isEmpty(); }
 
     @Override
-    public List<Processo> fila() {
-        return new ArrayList<>(); // TODO
-    }
+    public List<Processo> fila() { return new ArrayList<>(processos); }
 
     @Override
-    public int quantum() {
-        return Integer.MAX_VALUE;
-    }
+    public int quantum() { return Integer.MAX_VALUE; }
 
     @Override
-    public String nome() {
-        return "FCFS";
-    }
+    public String nome() { return "FCFS"; }
 }
