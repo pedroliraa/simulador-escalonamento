@@ -2,40 +2,48 @@ package simulador.escalonador;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import simulador.modelo.Processo;
 
 /**
  * Prioridade: maior prioridade primeiro, não preemptivo.
  * Desempate: chegada, depois menor ID.
- * TODO (Pessoa 4): implementar.
+ * Pessoa 4
  */
 public class Prioridade implements Escalonador {
 
-    /**
-     * Contradição do enunciado: true = número maior vence (5 é a maior prioridade).
-     * Trocar para false se o professor disser que o menor número vence.
-     */
     public static final boolean MAIOR_NUMERO_VENCE = true;
+    private final List<Processo> fila = new ArrayList<>();
 
     @Override
-    public void adicionar(Processo p) {
-        // TODO
+    public void adicionar(Processo processoPronto) {
+        fila.add(processoPronto);
     }
 
     @Override
     public Processo proximo() {
-        return null; // TODO
+        if (fila.isEmpty()) {
+            return null;
+        }
+
+        Processo maisUrgente = fila.get(0);
+        for (Processo candidato : fila) {
+            if (temMaisPrioridade(candidato, maisUrgente)) {
+                maisUrgente = candidato;
+            }
+        }
+
+        fila.remove(maisUrgente);
+        return maisUrgente;
     }
 
     @Override
     public boolean vazio() {
-        return true; // TODO
+        return fila.isEmpty();
     }
 
     @Override
     public List<Processo> fila() {
-        return new ArrayList<>(); // TODO
+        return new ArrayList<>(fila);
     }
 
     @Override
@@ -47,4 +55,20 @@ public class Prioridade implements Escalonador {
     public String nome() {
         return "Prioridade";
     }
+
+    private boolean temMaisPrioridade(Processo candidato, Processo atual) {
+        if (candidato.getPrioridade() != atual.getPrioridade()) {
+            if (MAIOR_NUMERO_VENCE) {
+                return candidato.getPrioridade() > atual.getPrioridade();
+            }
+            return candidato.getPrioridade() < atual.getPrioridade();
+        }
+        if (candidato.getChegada() != atual.getChegada()) {
+            return candidato.getChegada() < atual.getChegada();
+        }
+        return candidato.getId() < atual.getId();
+    }
+
+
 }
+
